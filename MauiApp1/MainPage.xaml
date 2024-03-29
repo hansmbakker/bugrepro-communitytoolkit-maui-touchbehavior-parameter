@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp1.MainPage"
+             xmlns:local="clr-namespace:MauiApp1"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="{x:Type local:MainViewModel}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,0"
+                             Spacing="25">
+            <Label Text="{Binding Title}"
+                   Style="{StaticResource Headline}"
+                   SemanticProperties.HeadingLevel="Level1" />
+
+            <Label Text="Tapping or long pressing an item does not correctly pass that item as CommandParameter or LongTouchCommandParameter."
+                   Style="{StaticResource SubHeadline}"
+                   SemanticProperties.HeadingLevel="Level1"  />
+
+            <CollectionView x:Name="collectionView"
+                            ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type x:String}">
+                        <Label Padding="10"
+                               Text="{Binding .}">
+                            <Label.Behaviors>
+                                <toolkit:TouchBehavior Command="{Binding Source={x:Reference collectionView}, Path=BindingContext.ShowItemCommand}"
+                                                       CommandParameter="{Binding .}"
+                                                       LongPressCommand="{Binding Source={x:Reference collectionView}, Path=BindingContext.ShowItemCommand}"
+                                                       LongPressCommandParameter="{Binding .}"/>
+                                <!--
+                                CommandParameter and LongPressCommandParameter are always passed as null in the CommunityToolkit.Maui TouchBehavior.
+                                this was not the case with https://github.com/Axemasta/Maui.TouchEffect -->
+                            </Label.Behaviors>
+                        </Label>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
